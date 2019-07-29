@@ -1,0 +1,55 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./pull-refresh.css">
+    <script src="./zepto.min.js"></script>
+    <script src="./vue.min.js"></script>
+    <title>Document</title>
+
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="list-view">
+        <p v-for="i in 50">11231111111</p>
+    </div>
+</body>
+
+<script src="./pull-refresh.js"></script>
+<script src="./pull-load-more.js"></script>
+<script>
+
+    new Vue({
+        el: '.list-view',
+        data: {}
+    });
+
+    let el = document.querySelector('.list-view');
+    let pullRefreshController = new PullRefresh({
+        el: el, // 绑定的DOM元素
+        onLoading: function () {
+            setTimeout(function () {
+                pullRefreshController.setRefreshDone();
+            }, 3000);
+        }
+    });
+
+    document.addEventListener('scroll', function () {
+        console.log(this.scrollingElement.scrollTop);
+    });
+
+    var loadMore = new PullLoadMore();
+
+    console.log(loadMore);
+
+</script>
+
+</html>
