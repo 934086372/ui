@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试链接状态监听</title>
+    <script src="https://cdn.ronghub.com/RongIMLib-2.3.3.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<a href="#" target="_blank">测试新标签页</a>
+</body>
+<script>
+
+    RongIMLib.RongIMClient.init("82hegw5u8d5yx");
+
+    // 设置连接监听状态 （ status 标识当前连接状态 ）
+    // 连接状态监听器
+    RongIMClient.setConnectionStatusListener({
+        onChanged: function (status) {
+            switch (status) {
+                case RongIMLib.ConnectionStatus.CONNECTED:
+                    console.log('链接成功');
+                    break;
+                case RongIMLib.ConnectionStatus.CONNECTING:
+                    console.log('正在链接');
+                    break;
+                case RongIMLib.ConnectionStatus.DISCONNECTED:
+                    console.log('断开连接');
+                    break;
+                case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+                    console.log('其他设备登录');
+                    // 检查 是不是当前设备登录
+                    sessionStorage.setItem("kickedFlag", 'true');
+                    window.addEventListener("storage", function (e) {
+                        console.log(e);
+                        if (e.key == 'loginStatus') {
+                            var data = JSON.parse(e.newValue);
+                            if (data.type == 'locallogin') {
+                                console.log("本地登录，不处理");
+                                sessionStorage.setItem("kickedFlag", 'false');
+                            } else {
+                                console.log("其他设备登录");
+                            }
+                        }
+                    });
+                    setTimeout(function () {
+                        var kickedFlag = sessionStorage.getItem("kickedFlag");
+                        console.log(kickedFlag);
+                        if (kickedFlag == 'true') {
+                            localStorage.setItem("loginStatus", JSON.stringify({
+                                type: 'otherDevice',
+                                stamp: new Date().getTime()
+                            }));
+                            console.log("其他设备登录");
+                        }
+                    }, 1000);
+                    break;
+                case RongIMLib.ConnectionStatus.DOMAIN_INCORRECT:
+                    console.log('域名不正确');
+                    break;
+                case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+                    console.log('网络不可用');
+                    break;
+            }
+        }
+    });
+
+
+    // 登录获取token
+    $.post("http://ns.seevin.com/api/admin/login/login", {
+        userName: '万潇逸',
+        userPsw: '123456'
+    }, function (res) {
+        console.log(res);
+        if (res.code == 200) {
+            var rongyunToken = res.data.token;
+            RongIMClient.connect(rongyunToken, {
+                onSuccess: function (userId) {
+                    console.log("Connect successfully." + userId);
+                    localStorage.setItem("loginStatus", JSON.stringify({
+                        type: 'locallogin',
+                        stamp: new Date().getTime()
+                    }));
+                },
+                onTokenIncorrect: function () {
+                    console.log('token无效');
+                },
+                onError: function (errorCode) {
+                    var info = '';
+                    switch (errorCode) {
+                        case RongIMLib.ErrorCode.TIMEOUT:
+                            info = '超时';
+                            break;
+                        case RongIMLib.ConnectionState.UNACCEPTABLE_PAROTOCOL_VERSION:
+                            info = '不可接受的协议版本';
+                            break;
+                        case RongIMLib.ConnectionState.IDENTIFIER_REJECTED:
+                            info = 'appkey不正确';
+                            break;
+                        case RongIMLib.ConnectionState.SERVER_UNAVAILABLE:
+                            info = '服务器不可用';
+                            break;
+                    }
+                    console.log(errorCode);
+                }
+            });
+
+            // 消息监听器
+            RongIMClient.setOnReceiveMessageListener({
+                // 接收到的消息
+                onReceived: function (message) {
+                    // 判断消息类型
+                    switch (message.messageType) {
+                        case RongIMClient.MessageType.TextMessage:
+                            // message.content.content => 消息内容
+                            break;
+                        case RongIMClient.MessageType.VoiceMessage:
+                            // 对声音进行预加载
+                            // message.content.content 格式为 AMR 格式的 base64 码
+                            break;
+                        case RongIMClient.MessageType.ImageMessage:
+                            // message.content.content => 图片缩略图 base64。
+                            // message.content.imageUri => 原图 URL。
+                            break;
+                        case RongIMClient.MessageType.DiscussionNotificationMessage:
+                            // message.content.extension => 讨论组中的人员。
+                            break;
+                        case RongIMClient.MessageType.LocationMessage:
+                            // message.content.latiude => 纬度。
+                            // message.content.longitude => 经度。
+                            // message.content.content => 位置图片 base64。
+                            break;
+                        case RongIMClient.MessageType.RichContentMessage:
+                            // message.content.content => 文本消息内容。
+                            // message.content.imageUri => 图片 base64。
+                            // message.content.url => 原图 URL。
+                            break;
+                        case RongIMClient.MessageType.InformationNotificationMessage:
+                            // do something...
+                            break;
+                        case RongIMClient.MessageType.ContactNotificationMessage:
+                            // do something...
+                            break;
+                        case RongIMClient.MessageType.ProfileNotificationMessage:
+                            // do something...
+                            break;
+                        case RongIMClient.MessageType.CommandNotificationMessage:
+                            // do something...
+                            break;
+                        case RongIMClient.MessageType.CommandMessage:
+                            // do something...
+                            break;
+                        case RongIMClient.MessageType.UnknownMessage:
+                            // do something...
+                            break;
+                        default:
+                        // do something...
+                    }
+                }
+            });
+
+        }
+    });
+
+
+</script>
+</html>

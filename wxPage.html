@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-background {
+            font-size: 0;
+        }
+
+        .page-background img {
+            width: 100%;
+        }
+
+        .page-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            font-size: 0;
+            background-color: rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .page-layer img{
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="page-background">
+    <img src="bg_page.png" alt="">
+</div>
+<div class="page-layer">
+    <img src="wx_layer.png" alt="">
+</div>
+</body>
+</html>

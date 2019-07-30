@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $.getJSON("cityList.JSON", function (data) {
+                console.log(data);
+                var new_data = [];
+                $.each(data, function (index, province) {
+                    var tmp_province = {
+                        name : province.name
+                    };
+                    var sub_city = [];
+                    $.each(province.sub, function (ind, city) {
+                        var tm_city = {
+                              name: city.name
+                        };
+                        var sub_area = [];
+                        $.each(city.sub, function (i, area) {
+
+                            sub_area.push({
+                                name: area
+                            });
+                        });
+                        tm_city.sub = sub_area;
+                        sub_city.push(tm_city);
+                    });
+                    tmp_province.sub = sub_city;
+                    new_data.push(tmp_province);
+                });
+                console.log(new_data);
+
+                document.write(JSON.stringify(new_data));
+
+            });
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

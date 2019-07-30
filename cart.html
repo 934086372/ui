@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 100%;
+            height: 700px;
+        }
+
+        .wrapper .imgBox ul {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .wrapper .imgBox li {
+            display: inline-block;
+            height: 300px;
+            width: 300px;
+            margin-left: 20px;
+        }
+
+        .wrapper .imgBox li img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .wrapper .imgBox button {
+            margin-left: 20px;
+        }
+
+        .rightBox {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 42px;
+            background-color: #444851;
+        }
+
+        .rightBox-ul {
+            margin-top: 100px;
+        }
+
+        .rightBox-ul li {
+            position: relative;
+        }
+
+        .rightBox-ul li a {
+            display: block;
+            width: 40px;
+            min-height: 50px;
+            text-decoration: none;
+        }
+
+        .fir a {
+            background: url('../img/index.png') 0px 0px no-repeat;
+        }
+
+        .thir a {
+            background: url('../img/index.png') 0px -200px no-repeat;
+        }
+
+        .four a {
+            background: url('../img/index.png') 0px -240px no-repeat;
+        }
+
+        .six a {
+            background: url('../img/index.png') 0px -314px no-repeat;
+        }
+
+        .seven {
+            margin-top: 100px;
+        }
+
+        .seven a {
+            background: url('../img/index.png') 0px -442px no-repeat;
+        }
+
+        .sec i, .fif i {
+            display: block;
+            height: 40px;
+            width: 40px;
+            background: url('../img/index.png') 0px -60px no-repeat;
+        }
+
+        .sec .con {
+            height: 48px;
+            width: 16px;
+            color: #fff;
+            font-size: 14px;
+            margin: 5px 0 0 12px;
+        }
+
+        .leftBox {
+            width: 92px;
+            height: 38px;
+            background: #444851;
+            position: absolute;
+            left: -121px;
+            top: 10px;
+            display: none;
+            color: #fff;
+            line-height: 38px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .sec span, .fif span {
+            display: block;
+            height: 21px;
+            width: 21px;
+            border-radius: 100%;
+            background-color: #ed145b;
+            color: #fff;
+            margin: 15px 0 0 10px;
+            text-align: center;
+            line-height: 21px;
+        }
+
+        .fif i {
+            background: url('../img/index.png') 0px -278px no-repeat;
+        }
+
+        .fif span {
+            background-color: #f40;
+            margin: 5px 0 0 10px;
+        }
+
+        .fir-leftBox, .sev-leftBox {
+            height: 185px;
+            width: 270px;
+            border: 1px solid #cecece;
+            position: absolute;
+            top: 5px;
+            left: -272px;
+            display: none;
+        }
+
+        .fir-leftBox {
+            background: url('../img/index-1.png') 0px 0px no-repeat;
+        }
+
+        .sev-leftBox {
+            width: 165px;
+            left: -175px;
+            background: url('../img/index-2.png') 0px 0px no-repeat;
+        }
+
+        .show {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<div class="wrapper">
+    <div class="imgBox">
+        <ul>
+            <li><img src="img/header.jpg" alt="">
+                <button class="btn1">加入购物车</button>
+                <button class="btn2">加入收藏夹</button>
+            </li>
+            <li><img src="img/preset.jpg" alt="">
+                <button class="btn1">加入购物车</button>
+                <button class="btn2">加入收藏夹</button>
+            </li>
+        </ul>
+    </div>
+    <div class="rightBox">
+        <ul class="rightBox-ul">
+            <li class="fir"><a href="javascript:void(0)"></a>
+                <div class="fir-leftBox"></div>
+            </li>
+            <li class="sec"><a href="javascript:;"> <i></i>
+                <div class="con">购物车</div>
+                <span id="btn1-add">0</span> </a>
+                <div class="leftBox">我的购物车</div>
+            </li>
+            <li class="thir"><a href="javascript:;"></a>
+                <div class="leftBox">我的资产</div>
+            </li>
+            <li class="four"><a href="javascript:;"></a>
+                <div class="leftBox">我的足迹</div>
+            </li>
+            <li class="fif"><a href="javascript:;"> <i></i> <span id="btn2-add">0</span> </a></li>
+            <li class="six"><a href="javascript:;"></a>
+                <div class="leftBox">我要充值</div>
+            </li>
+            <li class="seven"><a href="javascript:;"></a>
+                <div class="sev-leftBox"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script>
+
+
+    function getQueryString(url, name) {
+        var reg = new RegExp("(^|[&,/,?])" + name + "=([^&]*)(&|$)", "i");
+        var r = url.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    var url = "http://ns.optType=/?optType=openinapp&optDestination=couponMarket" ;
+    console.log(getQueryString(url,'optType'));
+
+    (function () {
+        let totalBtn1 = 0, totalBtn2 = 0;
+
+        function clickBtn() {
+            $('button').on('click', function () {
+                let img = $(this).parent().find('img');
+                let btn = $(this).attr('class');
+                let flyImg = img.clone().css({'opacity': '0.6'});
+                $('.wrapper').append(flyImg);
+                flyImg.css({
+                    'z-index': 999,
+                    'border': '3px solid #fff',
+                    'position': 'absolute',
+                    'height': img.height() + 'px',
+                    'width': img.width() + 'px',
+                    'top': img.offset().top + 'px',
+                    'left': img.offset().left + 'px'
+                })
+                flyImg.animate({'width': 50 + 'px', 'height': 50 + 'px', 'border-radius': 100 + '%'}, function () {
+                    let t;
+                    if (btn == 'btn1') {
+                        t = $('#btn1-add').offset().top - 60 + 'px';
+                        totalBtn1++;
+                        if (totalBtn1 > 99) {
+                            totalBtn1 = 99
+                        }
+                    } else if (btn = 'btn2') {
+                        t = $('#btn2-add').offset().top - 60 + 'px';
+                        totalBtn2++;
+                        if (totalBtn2 > 99) {
+                            totalBtn2 = 99
+                        }
+                    }
+                    flyImg.animate({
+                        'top': t,
+                        'left': ($(document).width() - $('.rightBox').width()) + 'px',
+                        'height': 0 + 'px',
+                        'width': 0 + 'px',
+                    }, 1500, function () {
+                        flyImg.remove();
+                        $('#btn2-add').html(totalBtn2);
+                        $('#btn1-add').html(totalBtn1);
+                    })
+                });
+            })
+        }
+
+        clickBtn();
+    })();
+</script>
+</body>
+</html>

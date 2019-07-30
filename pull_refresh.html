@@ -14,12 +14,99 @@
             padding: 0;
             margin: 0;
         }
+
+        .refreshWrapper {
+            height: 640px;
+            position: relative;
+        }
+
+        .loadMoreWrapper {
+            height: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            /* 保障ios上 滚动顺畅 */
+        }
+
+
+        .list-view {
+
+            text-align: center;
+        }
+
+        .list-view p {
+            margin: 0;
+            padding: 12px 0;
+            background-color: #ffffff;
+        }
+
+        .list-view p:nth-child(even) {
+            background-color: #f5f8fa;
+        }
+
+        .load-more-footer {
+            padding: 20px 0;
+            text-emphasis: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .load-more-loading {
+            box-sizing: border-box;
+            margin: 0 10px;
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            pointer-events: none;
+            border: 2px solid #00a0e9;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            -webkit-animation: 1s pull-loading linear infinite;
+            animation: 1s pull-loading linear infinite;
+        }
+
+        .load-more-text {
+            margin: 0;
+            padding: 10px 0;
+            line-height: 1;
+            font-size: 16px;
+            color: #646566;
+        }
+
+        @-webkit-keyframes pull-loading {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pull-loading {
+            0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="list-view">
-        <p v-for="i in 50">11231111111</p>
+
+    <div class="refreshWrapper">
+        <div class="loadMoreWrapper">
+            <div class="list-view">
+                <p v-for="i in list">{{i}}</p>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -27,28 +114,45 @@
 <script src="./pull-load-more.js"></script>
 <script>
 
-    new Vue({
+    var vm = new Vue({
         el: '.list-view',
-        data: {}
-    });
-
-    let el = document.querySelector('.list-view');
-    let pullRefreshController = new PullRefresh({
-        el: el, // 绑定的DOM元素
-        onLoading: function () {
-            setTimeout(function () {
-                pullRefreshController.setRefreshDone();
-            }, 3000);
+        data: {
+            list: 30
         }
     });
 
-    document.addEventListener('scroll', function () {
-        console.log(this.scrollingElement.scrollTop);
+    // let el = document.querySelector('.refreshWrapper');
+    // let pullRefreshController = new PullRefresh({
+    //     el: el, // 绑定的DOM元素
+    //     onLoading: function () {
+    //         setTimeout(function () {
+    //             vm.list = 30;
+    //             pullRefreshController.setRefreshDone();
+    //             loadMore.reset();
+    //         }, 1000);
+    //     }
+    // });
+
+    var elChild = document.querySelector('.loadMoreWrapper');
+    var loadMore = new PullLoadMore({
+        el: elChild,
+        onLoading: function () {
+            if (vm.list < 50) {
+                setTimeout(function () {
+                    vm.list = vm.list + 10;
+                    vm.$nextTick(function () {
+                        loadMore.loadDone();
+                    });
+                }, 1000);
+            } else {
+                loadMore.loadAllDone();
+            }
+        }
     });
 
-    var loadMore = new PullLoadMore();
 
     console.log(loadMore);
+
 
 </script>
 

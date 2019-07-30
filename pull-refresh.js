@@ -53,7 +53,7 @@
 
             var dom3 = document.createElement('div');
             dom3.className = 'pull-text';
-            dom3.innerText = '下拉加载更多';
+            dom3.innerText = '下拉刷新';
 
             refreshHeader.append(dom1);
             refreshHeader.append(dom2);
@@ -68,18 +68,23 @@
             this.el.addEventListener('touchmove', this.touchMove.bind(this));
             this.el.addEventListener('touchend', this.touchEnd.bind(this));
 
-            this.el.addEventListener('scroll', this.scroll.bind(this));
-
-            this.el.onscroll = function () {
-                console.log(this.scrollHeight);
+            // 监听子元素的滚动事件，优化正在下拉刷新的时候
+            var domChild = this.el.querySelector('.loadMoreWrapper');
+            if (domChild) {
+                domChild.addEventListener('scroll', this.childScrollListener.bind(this));
             }
+
         }
 
         touchStart(e) {
+            // 判断 元素是否滚动到最顶部了
+            if (this.el.querySelector('.loadMoreWrapper').scrollTop > 0) return;
             this.initPosY = e.touches[0].pageY;
         }
 
         touchMove(e) {
+
+            if (this.el.querySelector('.loadMoreWrapper').scrollTop > 0) return;
 
             if (this.isLoading) return;
             var translateY = e.touches[0].pageY - this.initPosY;
@@ -98,6 +103,7 @@
         }
 
         touchEnd(e) {
+            if (this.el.querySelector('.loadMoreWrapper').scrollTop > 0) return;
             if (this.pullDistance < this.options.threshold) {
                 this.el.style.transform = 'translateY(0px)';
                 this.el.style.transition = 'all 0.5s';
@@ -118,9 +124,17 @@
             this.loadingCallback();
         }
 
-        scroll(e) {
-            console.log(e);
-        };
+        childScrollListener() {
+
+            // 判断当前状态
+            if (!this.isLoading) return;
+
+            this.el.style.transform = 'translateY(0px)';
+            this.el.style.transition = 'all 0.3s';
+
+            this.isLoading = false;
+
+        }
 
     }
 
