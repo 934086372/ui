@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "swiper": "^4.3.3"
+    "swiper": "^6.5.1"
   },
   "devDependencies": {},
   "scripts": {
